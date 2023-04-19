@@ -1,18 +1,35 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { Dimensions } from "react-native";
+
 import Square from "../utils/square";
 import Grid from "../components/Grid";
+import Controls from "../components/Controls";
 
-const NUM_COLUMNS = 8;
+const NUM_COLS = 8;
+const NUM_ROWS = 10;
 const ITEM_SIZE = 30;
+
 const App = () => {
-  const [squares, setSquares] = useState(new Array(NUM_COLUMNS).fill().map(() => new Array(10).fill().map(() => new Square())));
+  const [squares, setSquares] = useState(new Array(NUM_ROWS).fill().map(() => new Array(NUM_COLS).fill().map(() => new Square())));
+  const [choosenText, setChoosenText] = useState("");
 
   const onPressItem = (item) => {
     const newSquares = squares.map((row) =>
       row.map((square) => {
         if (square.id === item.id) {
-          square.isUsed = true;
+          if (square.isUsed) {
+            setChoosenText((prev) => prev.substring(0, prev.length - 1));
+            square.isUsed = false;
+          } else {
+            setChoosenText((prev) => {
+              console.log(prev);
+              if (prev && prev?.length >= NUM_COLS) return prev;
+
+              return prev + square.letter;
+            });
+            square.isUsed = true;
+          }
         }
         return square;
       })
@@ -20,12 +37,36 @@ const App = () => {
     setSquares(newSquares);
   };
 
+  const onPressCancel = () => {
+    const choosenTextIdsArray = choosenText.split("");
+
+    const newSquares = squares.map((row) =>
+      row.map((square) => {
+        if (choosenTextIdsArray.includes(square.letter)) {
+          if (square.isUsed) {
+            square.isUsed = false;
+          }
+        }
+        return square;
+      })
+    );
+    setSquares(newSquares);
+    setChoosenText("");
+  };
+
+  const onPressSubmit = () => {
+    console.log("submitted", choosenText);
+  };
+
   return (
     <View style={styles.container}>
       <Grid data={squares} onPressItem={onPressItem} styles={styles} />
+      <Controls styles={styles} choosenText={choosenText} onPressCancel={onPressCancel} onPressSubmit={onPressSubmit} />
     </View>
   );
 };
+
+const { height, width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -33,6 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
+    paddingBottom: 0,
   },
   row: {
     flexDirection: "row",
@@ -40,28 +82,53 @@ const styles = StyleSheet.create({
     borderColor: "rgba(0,0,0,0.1)",
   },
   square: {
-    width: ITEM_SIZE,
-    height: ITEM_SIZE * 1.25,
+    width: ITEM_SIZE * 1.25,
+    height: ITEM_SIZE * 1.5,
     borderRadius: 5,
-    margin: 5,
+    margin: 2.5,
     alignItems: "center",
     justifyContent: "center",
     borderColor: "rgba(0,0,0,0.3)",
     borderWidth: 1.5,
   },
-  controls: {
+  controlButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 10,
+    marginVertical: 10,
+    marginHorizontal: 50,
   },
-  button: {
-    backgroundColor: "#DDD",
-    padding: 10,
-    borderRadius: 5,
+  choosenText: {
+    height: ITEM_SIZE * 2,
+    justifyContent: "center",
   },
+
   letter: {
     fontSize: 15,
     fontWeight: "bold",
+  },
+  controls: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: width / 1.5,
+  },
+  button: {
+    borderWidth: 2,
+    borderColor: "black",
+    padding: 10,
+    borderRadius: 100,
+  },
+  image: {
+    width: 30,
+    height: 30,
+  },
+  green_bg: {
+    backgroundColor: "green",
+  },
+  red_bg: {
+    backgroundColor: "red",
+  },
+  flatlistContainer: {
+    height: height / 1.4,
   },
 });
 
