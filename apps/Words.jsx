@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-
 import Square from "../utils/square";
-
 import Grid from "../components/Grid";
 
 const NUM_COLUMNS = 8;
 const ITEM_SIZE = 30;
-
 const App = () => {
   const [squares, setSquares] = useState(new Array(NUM_COLUMNS).fill().map(() => new Array(10).fill().map(() => new Square())));
 
@@ -34,6 +31,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+    alignItems: "center",
     padding: 10,
   },
   row: {
