@@ -1,32 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import Square from "../utils/square";
 
+import Grid from "../components/Grid";
+
 const NUM_COLUMNS = 8;
 const ITEM_SIZE = 30;
-
-const Grid = ({ data, onPressItem }) => {
-  return data.map((item, index) => (
-    <View key={index} style={styles.row}>
-      {item.map((square, index) => (
-        <GridCell key={"cell" + index} item={square} onPressItem={onPressItem} />
-      ))}
-    </View>
-  ));
-};
-
-const GridCell = ({ item, onPressItem }) => {
-  const backgroundColor = item.isUsed ? "red" : "white";
-  const color = item.isUsed ? "white" : "black";
-  return (
-    <TouchableOpacity style={[styles.square, { backgroundColor }]} onPress={() => onPressItem(item)}>
-      <View>
-        <Text style={[styles.letter, { color }]}>{item.letter}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
 
 const App = () => {
   const [squares, setSquares] = useState(new Array(NUM_COLUMNS).fill().map(() => new Array(10).fill().map(() => new Square())));
@@ -45,7 +25,7 @@ const App = () => {
 
   return (
     <View style={styles.container}>
-      <Grid data={squares} onPressItem={onPressItem} />
+      <Grid data={squares} onPressItem={onPressItem} styles={styles} />
     </View>
   );
 };
@@ -58,8 +38,8 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
-    borderWidth: 1, // Add this to show border around the container
-    borderColor: "rgba(0,0,0,0.2)", // Add this to set the color of the border
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.1)",
   },
   square: {
     width: ITEM_SIZE,
