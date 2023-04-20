@@ -12,6 +12,7 @@ import travel from "../utils/utils";
 
 import Grid from "../components/Grid";
 import Controls from "../components/Controls";
+import Score from "../components/Score";
 
 const { height, width } = Dimensions.get("window");
 
@@ -94,6 +95,7 @@ const App = () => {
 
   return (
     <View style={styles.container}>
+      <Score score={score} />
       <Grid data={squares} onPressItem={onPressItem} styles={styles} />
       <Controls styles={styles} choosenText={choosenText} onPressCancel={onPressCancel} onPressSubmit={onPressSubmit} />
     </View>
