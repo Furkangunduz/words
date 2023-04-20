@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 import { Dimensions } from "react-native";
+
+import style from "../style";
 
 import Square from "../utils/square";
 import Wordlist from "../utils/wordList";
 import wordScores from "../utils/wordScores";
+
+import travel from "../utils/utils";
 
 import Grid from "../components/Grid";
 import Controls from "../components/Controls";
@@ -17,6 +21,8 @@ const ITEM_SIZE = 30;
 const MAX_FALSE_GUESSES = 3;
 const WORDLIST = new Wordlist();
 const WORDSCORES = wordScores;
+
+const styles = style(ITEM_SIZE, width, height);
 
 const App = () => {
   const [squares, setSquares] = useState(new Array(NUM_ROWS).fill().map(() => new Array(NUM_COLS).fill().map(() => new Square())));
@@ -69,10 +75,12 @@ const App = () => {
           return prev + 1;
         }
       });
+      alert("yanlış");
     } else {
       setFalseGuessInRowCount(0);
       const score = choosenText.split("").reduce((acc, letter) => acc + WORDSCORES[letter] ?? 0, 0);
       setScore((prev) => prev + score);
+      alert("doğru");
     }
 
     travel(squares, (square) => {
@@ -84,16 +92,6 @@ const App = () => {
     setChoosenText("");
   };
 
-  const travel = (squares, action) => {
-    const newSquares = squares.map((row) =>
-      row.map((square) => {
-        action(square);
-        return square;
-      })
-    );
-    return newSquares;
-  };
-
   return (
     <View style={styles.container}>
       <Grid data={squares} onPressItem={onPressItem} styles={styles} />
@@ -101,69 +99,5 @@ const App = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-    paddingBottom: 0,
-  },
-  row: {
-    flexDirection: "row",
-    borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.1)",
-  },
-  square: {
-    width: ITEM_SIZE * 1.25,
-    height: ITEM_SIZE * 1.3,
-    borderRadius: 5,
-    margin: 1.5,
-    alignItems: "center",
-    justifyContent: "center",
-    borderColor: "rgba(0,0,0,0.3)",
-    borderWidth: 1.5,
-  },
-  controlButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginVertical: 10,
-    marginHorizontal: 50,
-  },
-  choosenText: {
-    height: ITEM_SIZE * 2,
-    width: "100%",
-    justifyContent: "center",
-  },
-  letter: {
-    fontSize: 25,
-    fontWeight: "bold",
-  },
-  controls: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: width / 1.5,
-  },
-  button: {
-    borderWidth: 2,
-    borderColor: "black",
-    padding: 10,
-    borderRadius: 100,
-  },
-  image: {
-    width: 30,
-    height: 30,
-  },
-  green_bg: {
-    backgroundColor: "green",
-  },
-  red_bg: {
-    backgroundColor: "red",
-  },
-  flatlistContainer: {
-    height: height / 1.5,
-  },
-});
 
 export default App;
