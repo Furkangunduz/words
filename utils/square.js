@@ -8,7 +8,7 @@ class Square {
   constructor() {
     this.letter = null;
     this.isVowel = null;
-    this.isUsed = false;
+    this.isSelected = false;
     this.id = Date.now() + "_" + Math.random() * 10000000;
     this.setRandomLetter();
   }

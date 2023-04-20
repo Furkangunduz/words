@@ -6,6 +6,7 @@ import Square from "../utils/square";
 import Grid from "../components/Grid";
 import Controls from "../components/Controls";
 
+const { height, width } = Dimensions.get("window");
 const NUM_COLS = 8;
 const NUM_ROWS = 10;
 const ITEM_SIZE = 30;
@@ -18,9 +19,9 @@ const App = () => {
     const newSquares = squares.map((row) =>
       row.map((square) => {
         if (square.id === item.id) {
-          if (square.isUsed) {
+          if (square.isSelected) {
             setChoosenText((prev) => prev.substring(0, prev.length - 1));
-            square.isUsed = false;
+            square.isSelected = false;
           } else {
             setChoosenText((prev) => {
               console.log(prev);
@@ -28,7 +29,7 @@ const App = () => {
 
               return prev + square.letter;
             });
-            square.isUsed = true;
+            square.isSelected = true;
           }
         }
         return square;
@@ -43,8 +44,8 @@ const App = () => {
     const newSquares = squares.map((row) =>
       row.map((square) => {
         if (choosenTextIdsArray.includes(square.letter)) {
-          if (square.isUsed) {
-            square.isUsed = false;
+          if (square.isSelected) {
+            square.isSelected = false;
           }
         }
         return square;
@@ -65,8 +66,6 @@ const App = () => {
     </View>
   );
 };
-
-const { height, width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
