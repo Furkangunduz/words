@@ -1,12 +1,14 @@
-// import React from "react";
+import { useMemo } from "react";
 import { View, FlatList } from "react-native";
 import GridCell from "./GridCell";
 
 export default ({ data, onPressItem, styles, isGameOver }) => {
+  const memoizedData = useMemo(() => data, [data]);
+
   return (
     <View style={styles.flatlistContainer}>
       <FlatList
-        data={data}
+        data={memoizedData}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item, indexRow }) => (
           <View key={"row_" + indexRow} style={styles.row}>
