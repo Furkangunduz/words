@@ -2,7 +2,7 @@
 import { View, FlatList } from "react-native";
 import GridCell from "./GridCell";
 
-export default ({ data, onPressItem, styles }) => {
+export default ({ data, onPressItem, styles, isGameOver }) => {
   return (
     <View style={styles.flatlistContainer}>
       <FlatList
@@ -18,6 +18,7 @@ export default ({ data, onPressItem, styles }) => {
                 onPressItem={onPressItem}
                 indexRow={indexRow}
                 indexCol={indexCol}
+                isGameOver={isGameOver}
               />
             ))}
           </View>

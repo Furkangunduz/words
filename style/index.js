@@ -26,14 +26,14 @@ export default (ITEM_SIZE, width, height) =>
     controlButtons: {
       flexDirection: "row",
       justifyContent: "space-between",
-      marginVertical: 10,
-      marginHorizontal: 50,
+      marginVertical: 2,
+      marginHorizontal: 30,
     },
     choosenText: {
       height: ITEM_SIZE * 2,
       width: "100%",
       justifyContent: "center",
-      paddingHorizontal: 20,
+      paddingHorizontal: 5,
     },
     letter: {
       fontSize: 25,
@@ -48,12 +48,13 @@ export default (ITEM_SIZE, width, height) =>
     button: {
       borderWidth: 2,
       borderColor: "black",
-      padding: 10,
+      paddingHorizontal: 25,
+      paddingVertical: 25,
       borderRadius: 100,
     },
     image: {
-      width: 30,
-      height: 30,
+      width: 35,
+      height: 35,
     },
     green_bg: {
       backgroundColor: "green",
