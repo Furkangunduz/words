@@ -2,16 +2,15 @@ import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
 
 export default Controls = ({ styles, choosenText, onPressCancel, onPressSubmit }) => {
   return (
-    <View style={{ justifyContent: "center", width: "100%" }}>
-      <View style={styles.choosenText}>
+    <View style={{ justifyContent: "space-evenly", width: "100%" }}>
+      <View style={[styles.choosenText, { justifyContent: "center", alignItems: "center" }]}>
         <FlatList
           numColumns={8}
           data={choosenText?.split("") ?? []}
           renderItem={({ item }) => {
-            console.log(item);
             return (
-              <View style={styles.square}>
-                <Text>{item}</Text>
+              <View style={[styles.square, { height: 50, width: 40, borderColor: "rgba(0,0,0,0.5)", backgroundColor: "black" }]}>
+                <Text style={{ fontSize: 30, textTransform: "uppercase", color: "white" }}>{item}</Text>
               </View>
             );
           }}
