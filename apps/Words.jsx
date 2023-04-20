@@ -3,60 +3,95 @@ import { StyleSheet, Text, View } from "react-native";
 import { Dimensions } from "react-native";
 
 import Square from "../utils/square";
+import Wordlist from "../utils/wordList";
+import wordScores from "../utils/wordScores";
+
 import Grid from "../components/Grid";
 import Controls from "../components/Controls";
 
 const { height, width } = Dimensions.get("window");
+
 const NUM_COLS = 8;
 const NUM_ROWS = 10;
 const ITEM_SIZE = 30;
+const MAX_FALSE_GUESSES = 3;
+const WORDLIST = new Wordlist();
+const WORDSCORES = wordScores;
 
 const App = () => {
   const [squares, setSquares] = useState(new Array(NUM_ROWS).fill().map(() => new Array(NUM_COLS).fill().map(() => new Square())));
   const [choosenText, setChoosenText] = useState("");
+  const [falseGuessInRowCount, setFalseGuessInRowCount] = useState(0);
+  const [score, setScore] = useState(0);
 
   const onPressItem = (item) => {
-    const newSquares = squares.map((row) =>
-      row.map((square) => {
-        if (square.id === item.id) {
-          if (square.isSelected) {
-            setChoosenText((prev) => prev.substring(0, prev.length - 1));
-            square.isSelected = false;
-          } else {
-            setChoosenText((prev) => {
-              console.log(prev);
-              if (prev && prev?.length >= NUM_COLS) return prev;
+    const newSquares = travel(squares, (square) => {
+      if (square.id === item.id) {
+        if (square.isSelected) {
+          setChoosenText((prev) => prev.substring(0, prev.length - 1));
+          square.isSelected = false;
+        } else {
+          setChoosenText((prev) => {
+            if (prev && prev?.length >= NUM_COLS) return prev;
 
-              return prev + square.letter;
-            });
-            square.isSelected = true;
-          }
+            return prev + square.letter;
+          });
+          square.isSelected = true;
         }
-        return square;
-      })
-    );
+      }
+    });
     setSquares(newSquares);
   };
 
   const onPressCancel = () => {
-    const choosenTextIdsArray = choosenText.split("");
+    const letterToRemove = choosenText.split("").pop();
 
-    const newSquares = squares.map((row) =>
-      row.map((square) => {
-        if (choosenTextIdsArray.includes(square.letter)) {
-          if (square.isSelected) {
-            square.isSelected = false;
-          }
+    const newSquares = travel(squares, (square) => {
+      if (square.letter === letterToRemove) {
+        if (square.isSelected) {
+          square.isSelected = false;
         }
-        return square;
-      })
-    );
+      }
+    });
     setSquares(newSquares);
-    setChoosenText("");
+    setChoosenText((prev) => prev.substring(0, prev.length - 1));
   };
 
   const onPressSubmit = () => {
-    console.log("submitted", choosenText);
+    if (!choosenText || choosenText.length <= 0) return;
+    const doesWordTrue = WORDLIST.doesHaveWord(choosenText);
+
+    if (!doesWordTrue) {
+      setFalseGuessInRowCount((prev) => {
+        if (prev + 1 >= MAX_FALSE_GUESSES) {
+          return 0;
+        } else {
+          return prev + 1;
+        }
+      });
+    } else {
+      setFalseGuessInRowCount(0);
+      const score = choosenText.split("").reduce((acc, letter) => acc + WORDSCORES[letter] ?? 0, 0);
+      setScore((prev) => prev + score);
+    }
+
+    travel(squares, (square) => {
+      if (square.isSelected) {
+        square.isSelected = false;
+      }
+    });
+
+    setChoosenText("");
+  };
+
+  const travel = (squares, action) => {
+    const newSquares = squares.map((row) =>
+      row.map((square) => {
+        action(square);
+        return square;
+      })
+    );
+    return newSquares;
   };
 
   return (
@@ -82,9 +117,9 @@ const styles = StyleSheet.create({
   },
   square: {
     width: ITEM_SIZE * 1.25,
-    height: ITEM_SIZE * 1.5,
+    height: ITEM_SIZE * 1.3,
     borderRadius: 5,
-    margin: 2.5,
+    margin: 1.5,
     alignItems: "center",
     justifyContent: "center",
     borderColor: "rgba(0,0,0,0.3)",
@@ -98,11 +133,11 @@ const styles = StyleSheet.create({
   },
   choosenText: {
     height: ITEM_SIZE * 2,
+    width: "100%",
     justifyContent: "center",
   },
-
   letter: {
-    fontSize: 15,
+    fontSize: 25,
     fontWeight: "bold",
   },
   controls: {
@@ -127,7 +162,7 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
   },
   flatlistContainer: {
-    height: height / 1.4,
+    height: height / 1.5,
   },
 });
 
