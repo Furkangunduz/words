@@ -9,7 +9,7 @@ export default Controls = ({ styles, choosenText, onPressCancel, onPressSubmit }
           data={choosenText?.split("") ?? []}
           renderItem={({ item }) => {
             return (
-              <View style={[styles.square, { height: 50, width: 40, borderColor: "rgba(0,0,0,0.5)", backgroundColor: "black" }]}>
+              <View style={[styles.square, { height: 50, width: 40, borderColor: "yellow", backgroundColor: "rgba(0,0,0,0.3)" }]}>
                 <Text style={{ fontSize: 30, textTransform: "uppercase", color: "white" }}>{item}</Text>
               </View>
             );

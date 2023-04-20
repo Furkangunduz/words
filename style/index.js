@@ -10,18 +10,22 @@ export default (ITEM_SIZE, width, height) =>
     },
     row: {
       flexDirection: "row",
-      borderWidth: 1,
-      borderColor: "rgba(0,0,0,0.1)",
     },
     square: {
       width: ITEM_SIZE * 1.25,
       height: ITEM_SIZE * 1.3,
-      borderRadius: 5,
-      margin: 1.5,
+      margin: 3,
       alignItems: "center",
       justifyContent: "center",
       borderColor: "rgba(0,0,0,0.3)",
+    },
+    circle: {
       borderWidth: 1.5,
+      borderRadius: 100,
+    },
+    rect: {
+      borderWidth: 1.5,
+      borderRadius: 5,
     },
     controlButtons: {
       flexDirection: "row",
@@ -52,6 +56,12 @@ export default (ITEM_SIZE, width, height) =>
       paddingVertical: 25,
       borderRadius: 100,
     },
+    selected: {
+      backgroundColor: "rgba(0,0,0,0.27)",
+      borderWidth: 3,
+      borderColor: "yellow",
+    },
+
     image: {
       width: 35,
       height: 35,
@@ -63,6 +73,6 @@ export default (ITEM_SIZE, width, height) =>
       backgroundColor: "red",
     },
     flatlistContainer: {
-      height: height / 1.68,
+      height: height / 1.66,
     },
   });

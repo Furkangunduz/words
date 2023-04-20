@@ -2,10 +2,10 @@ import { View, Text } from "react-native";
 
 function Score({ score, styles }) {
   return (
-    <View style={{ padding: 10 }}>
-      <Text style={{ fontSize: 40 }}>
+    <View style={{ padding: 10, paddingBottom: 25 }}>
+      <Text style={{ fontSize: 30 }}>
         Score:
-        <Text style={{ fontSize: 40, color: "red" }}> {score}</Text>
+        <Text style={{ fontSize: 30, color: "red" }}> {score}</Text>
       </Text>
     </View>
   );

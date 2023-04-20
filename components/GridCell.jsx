@@ -1,14 +1,11 @@
 import { TouchableOpacity, View, Text, Animated } from "react-native";
 import { useEffect, useRef } from "react";
-
-const fadeAnim = new Animated.Value(0);
+import { isBgLight } from "../utils/utils";
 
 export default ({ item, onPressItem, styles = {}, isGameOver }) => {
-  const backgroundColor = item.isSelected ? "red" : "white";
-  const color = item.isSelected ? "white" : "black";
-
+  const backgroundColor = item.isSelected ? "#000000" : item.color;
+  const color = !isBgLight(backgroundColor) ? "white" : "black";
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
   useEffect(() => {
     if (item.letter) {
       Animated.timing(fadeAnim, {
@@ -29,11 +26,13 @@ export default ({ item, onPressItem, styles = {}, isGameOver }) => {
     <TouchableOpacity
       style={[
         styles.square,
-        {
-          backgroundColor,
+        item.letter && {
+          backgroundColor: item.isSelected ? "#000000" : item.color,
         },
+        item.isSelected && styles.selected,
+        item.isVowel ? styles.circle : styles.rect,
       ]}
-      disabled={item.letter == undefined || item.letter == null || item.letter == 0 || item.isSelected}
+      disabled={item.letter == undefined || item.letter == null || item.letter == 0 || item.isSelected || isGameOver}
       onPress={() => onPressItem(item)}
     >
       {item.letter && (
