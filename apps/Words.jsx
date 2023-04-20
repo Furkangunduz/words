@@ -87,7 +87,7 @@ const App = () => {
           if (!bottomSquare.letter && !square.isMoved) {
             bottomSquare.setSquare(square);
             bottomSquare.isMoved = true;
-            square?.setSquare(new Square());
+            square.setSquare(new Square());
             square.isMoved = false;
           }
         }
@@ -168,7 +168,7 @@ const App = () => {
   };
 
   const dropRowOfSquares = () => {
-    for (let colIndex = 0; colIndex < NUM_ROWS; colIndex++) {
+    for (let colIndex = 0; colIndex < NUM_COLS; colIndex++) {
       squares[0][colIndex].setSquare(new Square());
       squares[0][colIndex].setRandomLetter();
     }
@@ -181,11 +181,11 @@ const App = () => {
   }, [isGameOver]);
 
   useInterval(() => {
-    generateNewPiece();
+    if (!isGameOver) generateNewPiece();
   }, gameSpeed * SECOND);
 
   useInterval(() => {
-    updateSquares();
+    if (!isGameOver) updateSquares();
   }, BLOCK_DROP_SPEED * SECOND);
 
   return (
