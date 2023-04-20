@@ -9,8 +9,18 @@ class Square {
     this.letter = null;
     this.isVowel = null;
     this.isSelected = false;
+    this.isMoved = false;
+    this.isStopDroping = true;
     this.id = Date.now() + "_" + Math.random() * 10000000;
-    this.setRandomLetter();
+  }
+
+  setSquare(square) {
+    this.letter = square.letter;
+    this.isVowel = square.isVowel;
+    this.isSelected = square.isSelected;
+    this.isMoved = square.isMoved;
+    this.isStopDroping = square.isStopDroping;
+    this.id = square.id;
   }
 
   setRandomLetter() {
