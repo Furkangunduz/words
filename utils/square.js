@@ -11,7 +11,9 @@ class Square {
     this.isSelected = false;
     this.isMoved = false;
     this.isStopDroping = true;
+    this.color = null;
     this.id = Date.now() + "_" + Math.random() * 10000000;
+    this.setRandomColor();
   }
 
   setSquare(square) {
@@ -21,6 +23,7 @@ class Square {
     this.isMoved = square.isMoved;
     this.isStopDroping = square.isStopDroping;
     this.id = square.id;
+    this.color = square.color;
   }
 
   setRandomLetter() {
@@ -42,6 +45,18 @@ class Square {
     } else {
       this.isVowel = false;
     }
+  }
+
+  setRandomColor() {
+    let color = "#000000";
+    while (color === "#000000" || color === "#FFFFFF" || color === "#000" || color === "#FFF" || color === "#ffffff") {
+      color =
+        "#" +
+        Math.floor(Math.random() * 16777215)
+          .toString(16)
+          .padStart(6, "0");
+    }
+    this.color = color;
   }
 }
 
