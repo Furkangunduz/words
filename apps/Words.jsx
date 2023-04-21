@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import useInterval from "../hooks/useInterval";
+
 import { View } from "react-native";
 import { Dimensions } from "react-native";
+import { Toast } from "toastify-react-native";
 
 import style from "../style";
 
@@ -130,8 +132,12 @@ const App = () => {
       setFalseGuessInRowCount((prev) => {
         if (prev + 1 >= MAX_FALSE_GUESSES) {
           dropRowOfSquares();
+
+          Toast.error(`3 defa yanlış deneme yaptınız. 1 satır aşşağı düşüyor.`, "top");
           return 0;
         } else {
+          Toast.error(`Yanlış deneme Yaptınız : ${prev + 1}`, "top");
+
           return prev + 1;
         }
       });
@@ -156,6 +162,7 @@ const App = () => {
           }
         }
 
+        Toast.success(`+${score} puan`, 500);
         return newScore;
       });
       travel(squares, ({ square }) => {
