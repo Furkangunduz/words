@@ -10,14 +10,14 @@ export default memo(({ item, onPressItem, styles = {}, isGameOver, isGamePaused 
   useMemo(() => {
     if (item.letter) {
       Animated.timing(fadeAnim, {
-        toValue: 0.9,
-        duration: 750,
+        toValue: 1,
+        duration: 500,
         useNativeDriver: true,
       }).start();
     } else {
       Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 750,
+        toValue: 0.5,
+        duration: 500,
         useNativeDriver: true,
       }).start();
     }
