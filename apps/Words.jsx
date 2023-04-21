@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import useInterval from "../hooks/useInterval";
 
 import { View } from "react-native";
-import { Dimensions } from "react-native";
+import { Dimensions, Alert } from "react-native";
 import { Toast } from "toastify-react-native";
 
 import style from "../style";
@@ -26,8 +26,8 @@ const MAX_FALSE_GUESSES = 3;
 const WORD_LIST = new Wordlist();
 const WORDS_CORES = wordScores;
 const SECOND = 1000;
-const BLOCK_DROP_SPEED = 1.25;
 const styles = style(ITEM_SIZE, width, height);
+const BLOCK_DROP_SPEED = 2;
 
 const App = () => {
   const [squares, setSquares] = useState(() =>
@@ -162,7 +162,7 @@ const App = () => {
           }
         }
 
-        Toast.success(`+${score} puan`, 500);
+        Toast.success(`+${score} puan`, "top");
         return newScore;
       });
       travel(squares, ({ square }) => {
@@ -182,11 +182,44 @@ const App = () => {
     }
   };
 
+  const restartGame = () => {
+    setSquares(() =>
+      new Array(NUM_ROWS).fill().map((row, rowIndex) =>
+        new Array(NUM_COLS).fill().map((item, colIndex) => {
+          if (rowIndex >= NUM_ROWS - 3) {
+            const square = new Square();
+            square.setRandomLetter();
+            return square;
+          } else {
+            return new Square();
+          }
+        })
+      )
+    );
+    setIsGameOver(false);
+    setIsGamePaused(false);
+    setChoosenText("");
+    setScore(0);
+    setGameSpeed(5);
+  };
+
   useEffect(() => {
     if (isGameOver) {
-      alert("oyun bitti");
+      Alert.alert("Oyun Bitti", "", [
+        {
+          text: "Tekrar Oyna",
+          onPress: () => restartGame(),
+          style: "default",
+        },
+      ]);
     }
   }, [isGameOver]);
+
+  useEffect(() => {
+    if (isGamePaused) {
+      Toast.info("Oyun duraklatıldı", "top");
+    }
+  }, [isGamePaused]);
 
   useInterval(() => {
     if (isGameOver) return;
