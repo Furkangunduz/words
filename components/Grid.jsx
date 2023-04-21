@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { View, FlatList } from "react-native";
 import GridCell from "./GridCell";
 
-export default ({ data, onPressItem, styles, isGameOver }) => {
+export default ({ data, onPressItem, styles, isGameOver, isGamePaused }) => {
   const memoizedData = useMemo(() => data, [data]);
 
   return (
@@ -21,6 +21,7 @@ export default ({ data, onPressItem, styles, isGameOver }) => {
                 indexRow={indexRow}
                 indexCol={indexCol}
                 isGameOver={isGameOver}
+                isGamePaused={isGamePaused}
               />
             ))}
           </View>

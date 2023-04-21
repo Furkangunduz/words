@@ -2,6 +2,11 @@ import { StyleSheet } from "react-native";
 export default (ITEM_SIZE, width, height) =>
   StyleSheet.create({
     container: {
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
@@ -12,12 +17,12 @@ export default (ITEM_SIZE, width, height) =>
       flexDirection: "row",
     },
     square: {
-      width: ITEM_SIZE * 1.25,
-      height: ITEM_SIZE * 1.3,
-      margin: 3,
+      width: ITEM_SIZE * 1.3,
+      height: ITEM_SIZE * 1.35,
+      margin: 2,
       alignItems: "center",
       justifyContent: "center",
-      borderColor: "rgba(0,0,0,0.3)",
+      borderColor: "rgba(0,0,0,0.2)",
     },
     circle: {
       borderWidth: 1.5,
@@ -61,7 +66,6 @@ export default (ITEM_SIZE, width, height) =>
       borderWidth: 3,
       borderColor: "yellow",
     },
-
     image: {
       width: 35,
       height: 35,
@@ -74,5 +78,16 @@ export default (ITEM_SIZE, width, height) =>
     },
     flatlistContainer: {
       height: height / 1.66,
+    },
+    fullWidth: {
+      width: width / 1.01,
+    },
+    overlayScreen: {
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.05)",
     },
   });

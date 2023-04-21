@@ -13,7 +13,7 @@ import { travel, gameSpeedTable } from "../utils/utils";
 
 import Grid from "../components/Grid";
 import Controls from "../components/Controls";
-import Score from "../components/Score";
+import ScoreSection from "../components/ScoreSection";
 
 const { height, width } = Dimensions.get("window");
 
@@ -45,6 +45,7 @@ const App = () => {
   const [falseGuessInRowCount, setFalseGuessInRowCount] = useState(0);
   const [score, setScore] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isGamePaused, setIsGamePaused] = useState(false);
   const [gameSpeed, setGameSpeed] = useState(5);
 
   const generateNewPiece = () => {
@@ -181,23 +182,42 @@ const App = () => {
   }, [isGameOver]);
 
   useInterval(() => {
-    if (!isGameOver) generateNewPiece();
+    if (isGameOver) return;
+    if (isGamePaused) return;
+    generateNewPiece();
   }, gameSpeed * SECOND);
 
   useInterval(() => {
-    if (!isGameOver) updateSquares();
+    if (isGameOver) return;
+    if (isGamePaused) return;
+    updateSquares();
   }, BLOCK_DROP_SPEED * SECOND);
 
+  useEffect(() => {
+    if (isGameOver) return;
+    if (isGamePaused) return;
+
+    generateNewPiece();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Score score={score} />
-      <Grid data={squares} onPressItem={onPressItem} styles={styles} isGameOver={isGameOver} />
+    <View style={[styles.container]}>
+      {isGamePaused && <View style={styles.overlayScreen}></View>}
+      <ScoreSection
+        score={score}
+        styles={styles}
+        isGamePaused={isGamePaused}
+        setIsGamePaused={setIsGamePaused}
+        falseGuessInRowCount={falseGuessInRowCount}
+      />
+      <Grid data={squares} onPressItem={onPressItem} styles={styles} isGameOver={isGameOver} isGamePaused={isGamePaused} />
       <Controls
         styles={styles}
         choosenText={choosenText}
         onPressCancel={onPressCancel}
         onPressSubmit={onPressSubmit}
         isGameOver={isGameOver}
+        isGamePaused={isGamePaused}
       />
     </View>
   );

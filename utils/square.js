@@ -1,3 +1,4 @@
+import { isBgLight } from "./utils";
 class Square {
   static TurkishVowels = ["a", "e", "ı", "i", "o", "ö", "u", "ü"];
   static TurkishConsonants = ["b", "c", "ç", "d", "f", "g", "ğ", "h", "j", "k", "l", "m", "n", "p", "r", "s", "ş", "t", "v", "y", "z"];
@@ -49,7 +50,7 @@ class Square {
 
   setRandomColor() {
     let color = "#000000";
-    while (color === "#000000" || color === "#FFFFFF" || color === "#000" || color === "#FFF" || color === "#ffffff") {
+    while (color === "#000000" || color === "#FFFFFF" || color === "#000" || color === "#FFF" || color === "#ffffff" || isBgLight(color)) {
       color =
         "#" +
         Math.floor(Math.random() * 16777215)

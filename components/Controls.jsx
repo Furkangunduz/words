@@ -1,6 +1,8 @@
 import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
 
-export default Controls = ({ styles, choosenText, onPressCancel, onPressSubmit }) => {
+export default Controls = ({ styles, choosenText, onPressCancel, onPressSubmit, isGamePaused }) => {
+  const tintColor = "white";
+
   return (
     <View style={{ justifyContent: "space-evenly", width: "100%" }}>
       <View style={[styles.choosenText, { justifyContent: "center", alignItems: "center" }]}>
@@ -20,13 +22,13 @@ export default Controls = ({ styles, choosenText, onPressCancel, onPressSubmit }
       <View style={styles.controlButtons}>
         <TouchableOpacity onPress={() => onPressSubmit()}>
           <View style={[styles.button, styles.green_bg]}>
-            <Image source={require("../assets/check.png")} style={[styles.image, { tintColor: "white" }]}></Image>
+            <Image source={require("../assets/check.png")} style={[styles.image, { tintColor }]}></Image>
           </View>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => onPressCancel()}>
           <View style={[styles.button, styles.red_bg]}>
-            <Image source={require("../assets/xmark.png")} style={[styles.image, { tintColor: "white" }]}></Image>
+            <Image source={require("../assets/xmark.png")} style={[styles.image, { tintColor }]}></Image>
           </View>
         </TouchableOpacity>
       </View>
