@@ -27,7 +27,7 @@ const WORD_LIST = new Wordlist();
 const WORDS_CORES = wordScores;
 const SECOND = 1000;
 const styles = style(ITEM_SIZE, width, height);
-const BLOCK_DROP_SPEED = 2;
+const BLOCK_DROP_SPEED = 0.5;
 
 const App = () => {
   const [squares, setSquares] = useState(() =>
@@ -53,19 +53,19 @@ const App = () => {
   const generateNewPiece = () => {
     let randomCol = Math.floor(Math.random() * NUM_COLS);
 
-    const square = squares[0][randomCol];
-    if (!square.letter) {
-      square.setRandomLetter();
-      square.isStopDroping = false;
+    let square = squares[0][randomCol];
+    while (!square.letter) {
+      randomCol = Math.floor(Math.random() * NUM_COLS);
+      square = squares[0][randomCol];
     }
+    square.setRandomLetter();
+    square.isStopDroping = false;
+    square.isMoved = true;
   };
 
   const updateSquares = () => {
-    const clearIsMovedSquares = travel(squares, ({ square }) => {
-      square.isMoved = false;
-    });
-
     let gameOver = false;
+
     for (let colIndex = 0; colIndex < NUM_COLS; colIndex++) {
       let isColumnFull = true;
       for (let rowIndex = 0; rowIndex < NUM_ROWS; rowIndex++) {
@@ -82,9 +82,9 @@ const App = () => {
       }
     }
 
-    const newSquares = travel(clearIsMovedSquares, ({ square, rowIndex, colIndex }) => {
+    const newSquares = travel(squares, ({ square, rowIndex, colIndex }) => {
       if (rowIndex < NUM_ROWS - 1) {
-        const bottomSquare = clearIsMovedSquares[rowIndex + 1][colIndex];
+        const bottomSquare = squares[rowIndex + 1][colIndex];
 
         if (!isGameOver) {
           if (!bottomSquare.letter && !square.isMoved) {
@@ -97,7 +97,11 @@ const App = () => {
       }
     });
 
-    setSquares(newSquares);
+    const clearIsMovedSquares = travel(newSquares, ({ square }) => {
+      square.isMoved = false;
+    });
+
+    setSquares(clearIsMovedSquares);
   };
 
   const onPressItem = (item) => {
