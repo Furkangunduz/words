@@ -1,12 +1,15 @@
+import { AsyncStorage } from "react-native";
+
 const travel = (arr_2d, action) => {
-  const newArr_2d = arr_2d.map((row, rowIndex) =>
+  return arr_2d.map((row, rowIndex) =>
     row.map((square, colIndex) => {
-      action({ square, rowIndex, colIndex });
-      return square;
+      const params = { square, rowIndex, colIndex };
+      action(params);
+      return params.square === square ? square : params.square;
     })
   );
-  return newArr_2d;
 };
+
 const gameSpeedTable = {
   "0-100": 5,
   "100-200": 4,
@@ -14,6 +17,7 @@ const gameSpeedTable = {
   "300-400": 2,
   "400-1000": 1,
 };
+
 function isBgLight(bg = "#000000") {
   if (bg[0] == "#") bg = bg.replace("#", "");
   if (bg.length != 6) bg = bg.slice(0, 6);
@@ -24,4 +28,22 @@ function isBgLight(bg = "#000000") {
   return brightness > 155;
 }
 
-export { travel, gameSpeedTable, isBgLight };
+async function setItem(key, value) {
+  try {
+    AsyncStorage.setItem(key, value);
+  } catch (error) {
+    console.error(error);
+  }
+}
+async function getItem(key) {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      return value;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export { travel, gameSpeedTable, isBgLight, setItem, getItem };

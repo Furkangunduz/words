@@ -5,6 +5,7 @@ class Square {
   static percent_40_1 = ["a", "e", "ı", "n", "r", "s", "t"];
   static percent_20 = ["o", "ö", "u", "ü"];
   static percent_40_2 = ["b", "c", "ç", "d", "f", "g", "ğ", "h", "i", "j", "k", "l", "m", "p", "r", "s", "ş", "t", "v", "y", "z"];
+  static icePng = require("../assets/buz.png");
 
   constructor() {
     this.letter = null;
@@ -15,6 +16,9 @@ class Square {
     this.color = null;
     this.id = Date.now() + "_" + Math.random() * 10000000;
     this.setRandomColor();
+    this.life = 1;
+    this.isIce = false;
+    this.isIceEffected = false;
   }
 
   setSquare(square) {
@@ -23,8 +27,23 @@ class Square {
     this.isSelected = square.isSelected;
     this.isMoved = square.isMoved;
     this.isStopDroping = square.isStopDroping;
-    this.id = square.id;
     this.color = square.color;
+    this.id = square.id;
+    this.life = square.life;
+    this.isIce = square.isIce;
+    this.isIceEffected = square.isIceEffected;
+  }
+
+  setIce() {
+    if (this.isIce) return;
+    this.isIce = true;
+    this.life = 2;
+  }
+
+  setIceEffected() {
+    if (this.isIceEffected) return;
+    this.isIceEffected = true;
+    this.life = 2;
   }
 
   setRandomLetter() {
