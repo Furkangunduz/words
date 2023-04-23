@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import useInterval from "../hooks/useInterval";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View } from "react-native";
 import { Dimensions, Alert } from "react-native";
 import { Toast } from "toastify-react-native";
@@ -27,9 +28,10 @@ const WORD_LIST = new Wordlist();
 const WORDS_CORES = wordScores;
 const SECOND = 1000;
 const styles = style(ITEM_SIZE, width, height);
-const BLOCK_DROP_SPEED = 0.5;
+const BLOCK_DROP_SPEED = 1;
 
-const App = () => {
+const App = ({ navigation, route }) => {
+  const { userName } = route.params;
   const [squares, setSquares] = useState(() =>
     new Array(NUM_ROWS).fill().map((row, rowIndex) =>
       new Array(NUM_COLS).fill().map((item, colIndex) => {
@@ -53,10 +55,12 @@ const App = () => {
   const generateNewPiece = () => {
     let randomCol = Math.floor(Math.random() * NUM_COLS);
 
-    let square = squares[0][randomCol];
-    while (!square.letter) {
-      randomCol = Math.floor(Math.random() * NUM_COLS);
-      square = squares[0][randomCol];
+    const square = squares[0][randomCol];
+    if (!square.letter) {
+      square.setRandomLetter();
+      square.isStopDroping = false;
+      square.isMoved = true;
+      square.setIce();
     }
     square.setRandomLetter();
     square.isStopDroping = false;
@@ -69,7 +73,7 @@ const App = () => {
     for (let colIndex = 0; colIndex < NUM_COLS; colIndex++) {
       let isColumnFull = true;
       for (let rowIndex = 0; rowIndex < NUM_ROWS; rowIndex++) {
-        const square = clearIsMovedSquares[rowIndex][colIndex];
+        const square = squares[rowIndex][colIndex];
         if (!square.letter) {
           isColumnFull = false;
           break;
@@ -87,6 +91,28 @@ const App = () => {
         const bottomSquare = squares[rowIndex + 1][colIndex];
 
         if (!isGameOver) {
+          if (square.isIce && !square.isIceEffected && bottomSquare.letter) {
+            const onTopEdge = rowIndex === 0;
+            const onRightEdge = colIndex === NUM_COLS - 1;
+            const onLeftEdge = colIndex === 0;
+
+            const topSquare = onTopEdge ? null : squares[rowIndex - 1][colIndex];
+            const rightSquare = onRightEdge ? null : squares[rowIndex][colIndex + 1];
+            const leftSquare = onLeftEdge ? null : squares[rowIndex][colIndex - 1];
+
+            if (rightSquare && rightSquare.letter && !rightSquare.isIceEffected) {
+              rightSquare.setIceEffected();
+            }
+            if (leftSquare && leftSquare.letter && !leftSquare.isIceEffected) {
+              leftSquare.setIceEffected();
+            }
+            if (topSquare && topSquare.letter && !topSquare.isIceEffected) {
+              topSquare.setIceEffected();
+            }
+            if (bottomSquare.letter && !bottomSquare.isIceEffected) {
+              bottomSquare.setIceEffected();
+            }
+          }
           if (!bottomSquare.letter && !square.isMoved) {
             bottomSquare.setSquare(square);
             bottomSquare.isMoved = true;
@@ -108,9 +134,10 @@ const App = () => {
     if (!item.isSelected && choosenText.length < NUM_COLS) {
       setChoosenText((prev) => {
         if (prev && prev?.length >= NUM_COLS) return prev;
+
+        item.isSelected = true;
         return prev + item.letter;
       });
-      item.isSelected = true;
     }
   };
 
@@ -132,7 +159,7 @@ const App = () => {
     if (!choosenText || choosenText.length <= 0) return;
     const doesWordTrue = WORD_LIST.doesHaveWord(choosenText);
 
-    if (!doesWordTrue) {
+    if (!true) {
       setFalseGuessInRowCount((prev) => {
         if (prev + 1 >= MAX_FALSE_GUESSES) {
           dropRowOfSquares();
@@ -171,7 +198,16 @@ const App = () => {
       });
       travel(squares, ({ square }) => {
         if (square.isSelected && chooosenTextArray.includes(square.letter)) {
-          square.setSquare(new Square());
+          square.life -= 1;
+          square.isSelected = false;
+
+          if (square.isIce) {
+            square.isIce = false;
+            square.life = 1;
+          }
+          if (square.life <= 0) {
+            square.setSquare(new Square());
+          }
         }
       });
     }
@@ -209,13 +245,28 @@ const App = () => {
 
   useEffect(() => {
     if (isGameOver) {
-      Alert.alert("Oyun Bitti", "", [
-        {
-          text: "Tekrar Oyna",
-          onPress: () => restartGame(),
-          style: "default",
-        },
-      ]);
+      AsyncStorage.getItem("scores")
+        .then((scores) => {
+          if (!scores) {
+            AsyncStorage.setItem("scores", JSON.stringify([score])).catch((error) => {
+              console.log(error);
+              Alert.alert("Error", "Failed to save scores");
+            });
+          } else {
+            const scoresArray = JSON.parse(scores);
+            scoresArray.push(score);
+            AsyncStorage.setItem("scores", JSON.stringify(scoresArray)).catch((error) => {
+              console.log(error);
+              Alert.alert("Error", "Failed to save scores");
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          Alert.alert("Error", "Failed to save scores");
+        });
+
+      navigation.navigate("End", { score, userName, restartGame });
     }
   }, [isGameOver]);
 

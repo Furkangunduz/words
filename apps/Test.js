@@ -1,6 +1,7 @@
 import { View, Text, Button } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+const Stack = createNativeStackNavigator();
 
 function HomeScreen({ navigation }) {
   return (
@@ -18,7 +19,6 @@ function DetailsScreen({ navigation }) {
     </View>
   );
 }
-const Stack = createNativeStackNavigator();
 
 export default function Test() {
   return (
