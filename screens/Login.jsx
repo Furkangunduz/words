@@ -15,6 +15,9 @@ export default ({ navigation }) => {
       console.log(error);
     });
 
+  AsyncStorage.setItem("scores", JSON.stringify([])).catch((error) => {
+    console.error(error);
+  });
   const handleStartButtonPress = () => {
     if (!userName) {
       Alert.alert("Error", "Please enter a username.");

@@ -54,13 +54,16 @@ const App = ({ navigation, route }) => {
 
   const generateNewPiece = () => {
     let randomCol = Math.floor(Math.random() * NUM_COLS);
+    let isIce = Math.random() * 10 < 1;
 
     const square = squares[0][randomCol];
     if (!square.letter) {
       square.setRandomLetter();
       square.isStopDroping = false;
       square.isMoved = true;
-      square.setIce();
+      if (isIce) {
+        square.setIce();
+      }
     }
     square.setRandomLetter();
     square.isStopDroping = false;
@@ -82,6 +85,7 @@ const App = ({ navigation, route }) => {
       if (isColumnFull) {
         gameOver = true;
         setIsGameOver(gameOver);
+
         break;
       }
     }
@@ -90,27 +94,25 @@ const App = ({ navigation, route }) => {
       if (rowIndex < NUM_ROWS - 1) {
         const bottomSquare = squares[rowIndex + 1][colIndex];
 
+        const leftSquare = colIndex > 0 ? squares[rowIndex][colIndex - 1] : null;
+        const rightSquare = colIndex < NUM_COLS - 1 ? squares[rowIndex][colIndex + 1] : null;
+
         if (!isGameOver) {
           if (square.isIce && !square.isIceEffected && bottomSquare.letter) {
             const onTopEdge = rowIndex === 0;
-            const onRightEdge = colIndex === NUM_COLS - 1;
-            const onLeftEdge = colIndex === 0;
-
             const topSquare = onTopEdge ? null : squares[rowIndex - 1][colIndex];
-            const rightSquare = onRightEdge ? null : squares[rowIndex][colIndex + 1];
-            const leftSquare = onLeftEdge ? null : squares[rowIndex][colIndex - 1];
 
-            if (rightSquare && rightSquare.letter && !rightSquare.isIceEffected) {
-              rightSquare.setIceEffected();
-            }
-            if (leftSquare && leftSquare.letter && !leftSquare.isIceEffected) {
-              leftSquare.setIceEffected();
-            }
             if (topSquare && topSquare.letter && !topSquare.isIceEffected) {
               topSquare.setIceEffected();
             }
             if (bottomSquare.letter && !bottomSquare.isIceEffected) {
               bottomSquare.setIceEffected();
+            }
+            if (leftSquare && leftSquare.letter && !leftSquare.isIceEffected) {
+              leftSquare.setIceEffected();
+            }
+            if (rightSquare && rightSquare.letter && !rightSquare.isIceEffected) {
+              rightSquare.setIceEffected();
             }
           }
           if (!bottomSquare.letter && !square.isMoved) {
@@ -159,7 +161,7 @@ const App = ({ navigation, route }) => {
     if (!choosenText || choosenText.length <= 0) return;
     const doesWordTrue = WORD_LIST.doesHaveWord(choosenText);
 
-    if (!true) {
+    if (!doesWordTrue) {
       setFalseGuessInRowCount((prev) => {
         if (prev + 1 >= MAX_FALSE_GUESSES) {
           dropRowOfSquares();
@@ -245,16 +247,20 @@ const App = ({ navigation, route }) => {
 
   useEffect(() => {
     if (isGameOver) {
+      const currentDate = new Date();
+      const currentDateTimeString = currentDate.toLocaleString();
+
       AsyncStorage.getItem("scores")
         .then((scores) => {
           if (!scores) {
-            AsyncStorage.setItem("scores", JSON.stringify([score])).catch((error) => {
+            const newScoresArray = [{ score, date: currentDateTimeString }];
+            AsyncStorage.setItem("scores", JSON.stringify(newScoresArray)).catch((error) => {
               console.log(error);
               Alert.alert("Error", "Failed to save scores");
             });
           } else {
             const scoresArray = JSON.parse(scores);
-            scoresArray.push(score);
+            scoresArray.push({ score, date: currentDateTimeString });
             AsyncStorage.setItem("scores", JSON.stringify(scoresArray)).catch((error) => {
               console.log(error);
               Alert.alert("Error", "Failed to save scores");

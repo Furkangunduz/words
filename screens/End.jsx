@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Table, Row, Rows } from "react-native-table-component";
 
 const styles = StyleSheet.create({
   container: {
@@ -44,6 +45,9 @@ export default ({ navigation, route }) => {
     }
   });
 
+  const tableHead = ["Player", "Score", "Date"];
+  const tableData = scores.map((item) => [userName, item.score, item.date]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Oyun Bitti</Text>
@@ -58,7 +62,13 @@ export default ({ navigation, route }) => {
       >
         <Text style={styles.loginText}>Tekrar Oyna</Text>
       </TouchableOpacity>
-      {/* <FlatList data={scores} renderItem={({ item }) => <Text>{item}</Text>} /> */}
+      <View style={{ marginTop: 20 }}>
+        <Text>Önceki Oyunlarda Aldığınız Puanlar : </Text>
+        <Table style={{ marginTop: 20 }}>
+          <Row data={tableHead} />
+          <Rows data={tableData} />
+        </Table>
+      </View>
     </View>
   );
 };
