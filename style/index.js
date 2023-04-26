@@ -17,8 +17,8 @@ export default (ITEM_SIZE, width, height) =>
       flexDirection: "row",
     },
     square: {
-      width: ITEM_SIZE * 1.3,
-      height: ITEM_SIZE * 1.35,
+      width: ITEM_SIZE * 1.1,
+      height: ITEM_SIZE * 1.1,
       margin: 2,
       alignItems: "center",
       justifyContent: "center",
@@ -77,7 +77,7 @@ export default (ITEM_SIZE, width, height) =>
       backgroundColor: "red",
     },
     flatlistContainer: {
-      height: height / 1.66,
+      height: height / 2,
     },
     fullWidth: {
       width: width / 1.01,

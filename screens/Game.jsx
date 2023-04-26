@@ -28,10 +28,11 @@ const WORD_LIST = new Wordlist();
 const WORDS_CORES = wordScores;
 const SECOND = 1000;
 const styles = style(ITEM_SIZE, width, height);
-const BLOCK_DROP_SPEED = 1;
+const BLOCK_DROP_SPEED = 0.75;
 
 const App = ({ navigation, route }) => {
   const { userName } = route.params;
+  console.log(userName);
   const [squares, setSquares] = useState(() =>
     new Array(NUM_ROWS).fill().map((row, rowIndex) =>
       new Array(NUM_COLS).fill().map((item, colIndex) => {
@@ -93,7 +94,6 @@ const App = ({ navigation, route }) => {
     const newSquares = travel(squares, ({ square, rowIndex, colIndex }) => {
       if (rowIndex < NUM_ROWS - 1) {
         const bottomSquare = squares[rowIndex + 1][colIndex];
-
         const leftSquare = colIndex > 0 ? squares[rowIndex][colIndex - 1] : null;
         const rightSquare = colIndex < NUM_COLS - 1 ? squares[rowIndex][colIndex + 1] : null;
 

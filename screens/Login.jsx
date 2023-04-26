@@ -5,25 +5,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default ({ navigation }) => {
   const [userName, setUserName] = useState("");
 
-  AsyncStorage.getItem("userName")
-    .then((data) => {
-      if (data !== null) {
-        setUserName(JSON.parse(data));
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-
-  AsyncStorage.setItem("scores", JSON.stringify([])).catch((error) => {
-    console.error(error);
-  });
   const handleStartButtonPress = () => {
     if (!userName) {
       Alert.alert("Error", "Please enter a username.");
       return;
     }
-    AsyncStorage.setItem("userName", JSON.stringify(userName))
+    AsyncStorage.setItem("userName", `${userName}`)
       .then(() => {
         navigation.navigate("Game", { userName });
       })
@@ -39,7 +26,6 @@ export default ({ navigation }) => {
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
-          value={userName}
           placeholder='Username'
           placeholderTextColor='#003f5c'
           onChange={(event) => setUserName(event.nativeEvent.text)}
